@@ -1,0 +1,41 @@
+---
+- hosts: server
+  become: yes #become admin, this needs --ask-become-pass, but we fixed that with sudo without pass
+  tasks:
+  - name: place ssh keys #parolis chaweris gareshe ro daukavshirde
+    authorized_key:
+      user: user
+      key: https://github.com/giokro.keys #es sheqmeni home/user/.ssh/authorized_keys
+
+  - name: sudo without pass
+    copy:
+      dest: /etc/sudoers.d/user
+      content: "user	ALL = NOPASSWD: ALL"
+
+  - name: create group "sysadmins"
+    group:
+      name: sysadmins
+      state: present
+
+  - name: create a user for teacher and add to sysadmins
+    user:
+     name: romakuchin
+     password: "{{ 'password' | password_hash('sha512', 'A512')}}"
+     groups:
+      - sysadmins
+     state: present
+     shell: /bin/bash
+     generate_ssh_key: yes
+     ssh_key_bits: 2048
+     ssh_key_file: .ssh/id_rsa
+
+  - name: get running processes
+    shell: 'ps -a'
+    register: out #puts the output in a variable
+
+  - name: dump running processes
+    debug: 
+      var: out.stdout_lines #prints the variable, but only the part we need
+
+
+

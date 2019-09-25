@@ -1,0 +1,34 @@
+---
+- name: Lab3
+  hosts: server
+  become: yes
+  tasks:
+  - name: Install Apache
+    package:
+      name: apache2
+      state: present
+
+  - name: Install PHP
+    package:
+      name: php
+      state: present
+
+  - name: Update Apache ports
+    copy:
+      src: ./files/ports.conf
+      dest: /etc/apache2/ports.conf
+
+  - name: Create PHP DocumentRoot
+    copy:
+      src: ./files/php-8080.conf
+      dest: /etc/apache2/sites-enabled/php-8080.conf
+
+  - name: Create PHP index.php file
+    copy:
+      src: ./files/index.php
+      dest: /var/www/php/
+
+  - name: Reload Apache
+    service:
+      name: apache2
+      state: reloaded
