@@ -1,0 +1,5 @@
+[server]
+192.168.56.102 ansible_port=2222 ansible_user=user
+
+[server2]
+192.168.56.103 ansible_port=22 ansible_user=user

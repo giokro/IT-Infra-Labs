@@ -1,0 +1,89 @@
+---
+- name: lab4 p1
+  hosts: server
+  vars:
+    wordpress_port: 80
+    mysql_port: 3306
+    mysql_host: localhost
+    mysql_db: lab4db
+    mysql_user: gio
+    mysql_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35336433393362643363616166393166376633626231643338393939636639313062663639653538
+          3662303562356235656137326134396162313331303761350a383530323764626337313563643735
+          30623865393237656262333765306339616333643833633361326333393735616437386561643661
+          6438366239316361300a663131366637333933383534393161373964333730303339616433346537
+          3831
+  become: yes
+  tasks:
+  - name: Install apache2
+    package:
+      name: apache2
+      state: present
+
+  - name: Apache config 1 # Here we tell apache to use port 80 for wordpress and to use the index.php file from wordpress folder
+    template:
+      src: ./files/wordpress.conf
+      dest: /etc/apache2/sites-enabled/wordpress.conf
+
+  - name: Apache config 2 # Change the 000 defaults port 
+    template:
+      src: ./files/000-default.conf
+      dest: /etc/apache2/sites-enabled/000-default.conf
+
+  - name: Install PHP
+    package:
+      name: php
+      state: present
+
+  - name: Install wordpress
+    package:
+      name: wordpress
+      state: present
+
+  - name: wordpress config # Here we put the database connection config for wordpress
+    template:
+      src: ./files/config-localhost.php
+      dest: /etc/wordpress/config-localhost.php
+
+  - name: reload apache
+    service:
+      name: apache2
+      state: reloaded
+
+
+
+- name: lab4 p2
+  hosts: server2
+  vars:
+    wordpress_port: 80
+    mysql_port: 3306
+    mysql_host: localhost
+    mysql_db: lab4db
+    mysql_user: gio
+    mysql_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35336433393362643363616166393166376633626231643338393939636639313062663639653538
+          3662303562356235656137326134396162313331303761350a383530323764626337313563643735
+          30623865393237656262333765306339616333643833633361326333393735616437386561643661
+          6438366239316361300a663131366637333933383534393161373964333730303339616433346537
+          3831
+  become: yes
+  tasks:
+  - name: Install MySQL
+    package:
+      name: mysql-server
+      state: present
+
+  - name: Add DB file
+    template:
+      src: ./files/database.sql
+      dest: /tmp/database.sql
+
+  - name: Create DB & User # This runs the script and creates the database
+    shell: mysql --defaults-file=/etc/mysql/debian.cnf < /tmp/database.sql
+
+  - name: Remove file
+    file:
+      path: /tmp/database.sql
+      state: absent
