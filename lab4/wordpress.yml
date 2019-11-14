@@ -1,19 +1,6 @@
 ---
 - name: lab4 p1
-  hosts: server
-  vars:
-    wordpress_port: 80
-    mysql_port: 3306
-    mysql_host: localhost
-    mysql_db: lab4db
-    mysql_user: gio
-    mysql_pass: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          35336433393362643363616166393166376633626231643338393939636639313062663639653538
-          3662303562356235656137326134396162313331303761350a383530323764626337313563643735
-          30623865393237656262333765306339616333643833633361326333393735616437386561643661
-          6438366239316361300a663131366637333933383534393161373964333730303339616433346537
-          3831
+  hosts: server1
   become: yes
   tasks:
   - name: Install apache2
@@ -55,25 +42,17 @@
 
 - name: lab4 p2
   hosts: server2
-  vars:
-    wordpress_port: 80
-    mysql_port: 3306
-    mysql_host: localhost
-    mysql_db: lab4db
-    mysql_user: gio
-    mysql_pass: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          35336433393362643363616166393166376633626231643338393939636639313062663639653538
-          3662303562356235656137326134396162313331303761350a383530323764626337313563643735
-          30623865393237656262333765306339616333643833633361326333393735616437386561643661
-          6438366239316361300a663131366637333933383534393161373964333730303339616433346537
-          3831
   become: yes
   tasks:
   - name: Install MySQL
     package:
       name: mysql-server
       state: present
+
+  - name: Mysql conf #  by default listens to localhost, so 127.0.0.1 changed to 0.0.0.0
+    template:
+      src: ./files/mysqld.cnf
+      dest: /etc/mysql/mysql.conf.d/mysqld.cnf
 
   - name: Add DB file
     template:
@@ -82,6 +61,11 @@
 
   - name: Create DB & User # This runs the script and creates the database
     shell: mysql --defaults-file=/etc/mysql/debian.cnf < /tmp/database.sql
+
+  - name: reload mysql
+    service:
+      name: mysql
+      state: reloaded
 
   - name: Remove file
     file:
