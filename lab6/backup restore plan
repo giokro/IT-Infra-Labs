@@ -1,0 +1,10 @@
+- Backup restore for all backups is done by user backup3r.
+
+- can be restored with command: 
+	duplicity --no-encryption restore rsync://{{backup-server}}//srv/backup/{{needed_dir}} /etc/bind			for bind master
+
+	duplicity --no-encryption restore rsync://{{backup-server}}//srv/backup/{{needed_dir}} /etc/bind			for bind slave
+	duplicity --no-encryption restore rsync://{{backup-server}}//srv/backup/{{needed_dir}} /lib/var/bind			for bind slave
+
+	duplicity --no-encryption restore rsync://{{backup-server}}//srv/backup/{{needed_dir}} /home/backup3r/file.sql		for mysql
+	mysql lab4db < /home/backup3r/filename.sql										for mysql

@@ -1,0 +1,24 @@
+---
+- name: backup server1 # in cron.d commands run at given intervals
+  hosts: server1
+  become: yes
+  tasks:
+    - name: place bind master
+      template:
+        src: ./files/backup_bind_master
+        dest: /etc/cron.d/backup_bind_master
+
+
+- name: backup server2
+  hosts: server2
+  become: yes
+  tasks:
+    - name: place bind slave
+      template:
+        src: ./files/backup_bind_slave
+        dest: /etc/cron.d/backup_bind_slave
+
+    - name: place mysql_db
+      template:
+        src: ./files/backup_mysql
+        dest: /etc/cron.d/

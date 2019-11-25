@@ -1,0 +1,41 @@
+---
+- name: install apache2
+  hosts: server2
+  become: yes
+  tasks:
+  - name: Install apache2
+    package:
+      name: apache2
+      state: present
+
+- name: install mysql
+  hosts: server2
+  become: yes
+  tasks:
+  - name: Install MySQL
+    package:
+      name: mysql-server
+      state: present
+
+  - name: Mysql conf #  by default listens to localhost, so 127.0.0.1 changed to 0.0.0.0
+    template:
+      src: ./files/mysqld.cnf
+      dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+
+  - name: Add DB file
+    template:
+      src: ./files/database.sql
+      dest: /tmp/database.sql
+
+  - name: Create mysql user # This runs the script and creates the database
+    shell: mysql --defaults-file=/etc/mysql/debian.cnf < /tmp/database.sql
+
+  - name: reload mysql
+    service:
+      name: mysql
+      state: restarted
+
+  - name: Remove file
+    file:
+      path: /tmp/database.sql
+      state: absent

@@ -1,0 +1,28 @@
+- name: download node exporter # this is a monitoring tool that monitors the operating system itself, like the cpu usage, memory usage and so on.
+  get_url:
+    url: https://github.com/prometheus/node_exporter/releases/download/v0.18.1/node_exporter-0.18.1.linux-amd64.tar.gz
+    dest: /opt/node_exporter-0.18.1.linux-amd64.tar.gz
+
+- name: unarchive
+  unarchive:
+    remote_src: yes
+    src: /opt/node_exporter-0.18.1.linux-amd64.tar.gz
+    dest: /opt/
+
+- name: add user
+  user:
+    name: "{{ node_exporter_user }}"
+    password: "{{ 'node_exporter' | password_hash('sha512', 'A512')}}"
+    state: present
+    shell: /bin/bash
+
+- name: systemd node_exporter # this turns the node_exporter code we downloaded into a systemd service
+  template:
+    src: node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service # every service file is located in this location
+
+- name: start node_exporter service
+  service:
+    name: node_exporter
+    state: started
+    enabled: yes

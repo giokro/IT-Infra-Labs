@@ -1,0 +1,36 @@
+---
+- name: backup agent
+  hosts: server1
+  become: yes
+  tasks:
+    - name: add user
+      user:
+        name: "{{ user }}"
+        password: "{{ 'backup' | password_hash('sha512', 'A512')}}"
+        state: present
+        groups: bind
+        append: yes
+        shell: /bin/bash
+
+    - name: Create .ssh directory
+      file:
+        path: /home/{{ user }}/.ssh
+        state: directory
+        owner: "{{ user }}"
+
+    - name: copy id_rsa
+      template:
+        src: ./files/id_rsa2
+        dest: /home/{{ user }}/.ssh/id_rsa
+
+    - name: copy id_rsa.pub
+      template:
+        src: ./files/id_rsa2.pub
+        dest: /home/{{ user }}/.ssh/id_rsa.pub
+
+    - name: install duplicity
+      package:
+        name: duplicity
+        state: present
+
+

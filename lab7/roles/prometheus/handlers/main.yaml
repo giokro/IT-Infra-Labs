@@ -1,0 +1,7 @@
+- name: restart systemd
+  shell: "systemctl daemon-reload" # when a file changes (not when a new file is added) in systemd, it needs to be restarted
+
+- name: restart prometheus
+  service:
+    name: prometheus
+    state: restarted

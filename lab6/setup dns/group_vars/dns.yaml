@@ -1,0 +1,40 @@
+---
+  forwarders:
+    - 8.8.8.8
+    - 1.1.1.1
+    - 9.9.9.10
+  locals:
+    - 192.168.56.0/24
+    - 127.0.0.0/24
+  dns_records:
+    - name: island.awsome.
+      type: NS
+      address: server1.island.awsome.
+
+    - name: island.awsome.
+      type: NS
+      address: server2.island.awsome.
+
+    - name: server1.island.awsome.
+      type: A
+      address: 192.168.56.105
+
+    - name: server2.island.awsome.
+      type: A
+      address: 192.168.56.106
+
+    - name: prometheus.island.awsome.
+      type: CNAME
+      address: server2.island.awsome.
+
+    - name: grafana.island.awsome.
+      type: CNAME
+      address: server2.island.awsome.
+
+    - name: ns1.island.awsome.
+      type: CNAME
+      address: server1.island.awsome.
+
+    - name: ns2.island.awsome.
+      type: CNAME
+      address: server2.island.awsome.

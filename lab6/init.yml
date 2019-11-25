@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: place ssh keys
+    authorized_key:
+      user: user
+      key: https://github.com/giokro.keys
+
+  - name: sudo without pass
+    copy:
+      dest: /etc/sudoers.d/user
+      content: "user	ALL = NOPASSWD: ALL"

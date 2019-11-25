@@ -1,0 +1,83 @@
+---
+- name: Initial setup
+  hosts: server2
+  become: yes
+  tasks:
+    - name: Setup interface
+      template:
+        src: files/enp0s8
+        dest: /etc/netplan/55-enp0s8.yaml
+      notify:
+        - netplan apply
+
+  handlers: #handlers run only when something changes
+    - name: netplan apply
+      shell: netplan apply
+
+- name: setup dns
+  hosts: dns
+  become: yes
+  tasks:
+    - name: dns package
+      apt:
+        package: bind9
+
+    - name: config bind options
+      template:
+        src: files/named.conf.options
+        dest: /etc/bind/named.conf.options
+      notify: restart bind
+
+    - name: config bind local
+      template:
+        src: files/named.conf.local
+        dest: /etc/bind/named.conf.local
+      notify: 
+        - restart bind
+        - checkconf
+
+    - name: hash db # hash is used to check for changes
+      when: dns_role == "master"
+      copy: # if the hash on the host != current hash the db will be changed
+        content: "{{ dns_records | hash }}"
+        dest: /etc/bind/db.island.hash
+      notify:
+        - get timestamp
+        - config bind db
+        - reload db
+
+    - name: hash db ptr
+      when: dns_role == "master"
+      copy:
+        content: "{{ dns_records | hash }}"
+        dest: /etc/bind/db.island.ptr.hash
+      notify:
+        - get timestamp
+        - config bind db ptr
+        - reload db
+
+  handlers:
+    - name: get timestamp # This is used for the serial in db
+      shell: date +%s
+      register: ts
+
+    - name: config bind db
+      template:
+        src: files/db.island
+        dest: /etc/bind/db.island
+
+    - name: config bind db ptr # It resolves an ip to a domain name
+      template:
+        src: files/db.island.ptr
+        dest: /etc/bind/db.island.ptr
+
+    - name: restart bind
+      service:
+        name: bind9
+        state: restarted
+
+    - name: reload db
+      shell: rndc reload # just reloads the db
+
+    - name: checkconf
+      shell: named-checkconf
