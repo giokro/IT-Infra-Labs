@@ -1,0 +1,21 @@
+---
+- name: influx
+  become: yes
+  hosts: server2
+  roles:
+  - influxdb
+  tags: influxdb # with tags you can specify which play you want to run, -- ansible-playbook play.yaml --tags=lola
+
+- name: grafana
+  become: yes
+  hosts: server2
+  roles:
+  - grafana
+  tags: grafana # you can also do --skip-tags=cocacola
+
+- name: syslog
+  become: yes
+  hosts: server2
+  roles:
+    - syslog
+  tags: syslog

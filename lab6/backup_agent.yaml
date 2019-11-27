@@ -28,6 +28,9 @@
         src: ./files/id_rsa2.pub
         dest: /home/{{ user }}/.ssh/id_rsa.pub
 
+    - name: add ssh fingerprint # remote host's pub key hash
+      shell: ssh-keyscan -H {{ backup_server }} >> /home/{{ user }}/.ssh/known_hosts
+
     - name: install duplicity
       package:
         name: duplicity

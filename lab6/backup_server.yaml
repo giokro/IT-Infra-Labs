@@ -44,6 +44,9 @@
         user: "{{ user }}"
         key: "{{ lookup('file', './files/id_rsa2.pub') }}"
 
+    - name: add ssh fingerprint # remote host's pub key hash for no prompt when connecting for the first time
+      shell: ssh-keyscan -H localhost >> /home/{{ user }}/.ssh/known_hosts
+
     - name: Create /srv/backup
       file:
         path: /srv/backup
