@@ -1,0 +1,7 @@
+- name: install docker # docker is used for software virtualisation (It's like virtual box but only with the software part)
+  apt:
+    package: [docker.io, python-pip]
+
+- name: install docker component
+  pip:
+    name: docker-py

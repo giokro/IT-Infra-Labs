@@ -1,0 +1,13 @@
+- name: Create wordpress container
+  docker_container:
+    name: wordpress
+    image: wordpress
+    state: started
+    network_mode: bridge
+    ports: 8080:80 # it will run on port 8080 on the host machine and on port 80 in the container
+    detach: true # it means it will run in the background basically
+    env:
+      WORDPRESS_DB_HOST: 192.168.56.106:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
