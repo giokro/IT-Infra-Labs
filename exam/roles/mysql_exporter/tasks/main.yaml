@@ -21,6 +21,24 @@
     src: .my.cnf
     dest: '{{ mycnf_dest }}.my.cnf'
 
+- name: Add DB file
+  template:
+    src: database.sql
+    dest: /tmp/database.sql
+
+- name: Create mysql user
+  shell: mysql --defaults-file=/etc/mysql/debian.cnf < /tmp/database.sql
+
+- name: reload mysql
+  service:
+    name: mysql
+    state: restarted
+
+- name: Remove file
+  file:
+    path: /tmp/database.sql
+    state: absent
+
 - name: systemd mysqld_exporter
   template:
     src: mysqld_exporter.service

@@ -80,7 +80,7 @@
 
 - name: syslog # works
   become: yes
-  hosts: server2
+  hosts: all
   roles:
     - syslog
   tags: syslog
