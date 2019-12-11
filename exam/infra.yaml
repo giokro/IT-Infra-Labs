@@ -1,0 +1,86 @@
+- name: haproxy # works
+  become: yes
+  hosts: server1
+  roles:
+  - haproxy
+  tags: haproxy
+
+- name: docker # works
+  become: yes
+  hosts: server1
+  roles:
+  - docker
+  tags: docker
+
+- name: wordpress container 1 # works
+  become: yes
+  hosts: server1
+  roles:
+  - wordpress_container1
+  tags: wordpress
+
+- name: wordpress container 2 # works
+  become: yes
+  hosts: server1
+  roles:
+  - wordpress_container2
+  tags: wordpress
+
+- name: mysql # works
+  become: yes
+  hosts: server2
+  roles:
+  - mysql
+  tags: mysql
+
+- name: bind # works
+  become: yes
+  hosts: all
+  roles:
+  - bind
+  tags: bind
+
+- name: grafana_container # works
+  become: yes
+  hosts: server1
+  roles: 
+  - grafana_container
+  tags: grafana
+
+- name: prometheus # works
+  become: yes
+  hosts: server2
+  roles:
+  - prometheus
+  tags: prometheus
+
+- name: exporters 1 # works
+  become: yes
+  hosts: server1
+  roles:
+  - node_exporter
+  - bind_exporter
+  tags: exporters1
+  
+- name: exporters 2 # works
+  become: yes
+  hosts: server2
+  roles:
+  - node_exporter
+  - mysql_exporter
+  - bind_exporter
+  tags: exporters2
+
+- name: influx # works
+  become: yes
+  hosts: server2
+  roles:
+  - influxdb
+  tags: influxdb
+
+- name: syslog # works
+  become: yes
+  hosts: server2
+  roles:
+    - syslog
+  tags: syslog

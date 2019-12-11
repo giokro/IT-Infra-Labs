@@ -1,0 +1,27 @@
+- name: install influxdb # influx db is database which can keep track of the logs
+  apt:
+    package: ['influxdb','influxdb-client', 'python-pip']
+
+- name: install requests module # needed for db creation
+  pip:
+    name: ['requests', 'influxdb']
+
+- name: create db
+  influxdb_database:
+    database_name: "rtt"
+
+- name: download telegraf
+  get_url:
+    url: https://dl.influxdata.com/telegraf/releases/telegraf_1.12.6-1_amd64.deb
+    dest: /opt/telegraf_1.12.6-1_amd64.deb
+
+- name: install telegraf # telegraf takes info fom system and puts it in influx db
+  apt:
+    deb: /opt/telegraf_1.12.6-1_amd64.deb
+
+- name: upload conf
+  template:
+    src: telegraf.conf
+    dest: /etc/telegraf/telegraf.conf
+  notify:
+    - restart telegraf

@@ -1,0 +1,24 @@
+- name: get timestamp # This is used for the serial in db
+  shell: date +%s
+  register: ts
+
+- name: config bind db
+  template:
+    src: db.island
+    dest: /etc/bind/db.island
+
+- name: config bind db ptr # It resolves an ip to a domain name
+  template:
+    src: db.island.ptr
+    dest: /etc/bind/db.island.ptr
+
+- name: restart bind
+  service:
+    name: bind9
+    state: restarted
+
+- name: reload db
+  shell: rndc reload # just reloads the db
+
+- name: checkconf
+  shell: named-checkconf

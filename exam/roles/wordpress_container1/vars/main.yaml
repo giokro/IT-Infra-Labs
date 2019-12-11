@@ -1,0 +1,2 @@
+container_name: wordpress1
+host_port: 8080

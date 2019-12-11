@@ -1,0 +1,4 @@
+version: 2.14.0
+prometheus_user: root
+server1: server1.island.awsome
+server2: server2.island.awsome

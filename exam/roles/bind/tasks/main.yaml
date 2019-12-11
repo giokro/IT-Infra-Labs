@@ -1,0 +1,48 @@
+- name: dns package
+  apt:
+    package: bind9
+
+- name: config bind options
+  template:
+    src: named.conf.options
+    dest: /etc/bind/named.conf.options
+  notify: restart bind
+
+- name: config bind local
+  template:
+    src: named.conf.local
+    dest: /etc/bind/named.conf.local
+  notify: 
+    - restart bind
+    - checkconf
+
+- name: hash db # hash is used to check for changes
+  when: dns_role == "master"
+  copy: # if the hash on the host != current hash the db will be changed
+    content: "{{ dns_records | hash }}"
+    dest: /etc/bind/db.island.hash
+  notify:
+    - get timestamp
+    - config bind db
+    - reload db
+
+- name: hash db ptr
+  when: dns_role == "master"
+  copy:
+    content: "{{ dns_records | hash }}"
+    dest: /etc/bind/db.island.ptr.hash
+  notify:
+    - get timestamp
+    - config bind db ptr
+    - reload db
+
+- name: systemd-resolved
+  service:
+    name: systemd-resolved
+    state: stopped
+    enabled: no
+
+- name: resolv.conf
+  template:
+    src: resolv.conf
+    dest: /etc/resolv.conf
