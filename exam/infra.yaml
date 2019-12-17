@@ -78,6 +78,13 @@
   - influxdb
   tags: influxdb
 
+- name: telegraf # works
+  become: yes
+  hosts: all
+  roles:
+  - telegraf
+  tags: telegraf
+
 - name: syslog # works
   become: yes
   hosts: all

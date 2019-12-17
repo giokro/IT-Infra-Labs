@@ -1,2 +1,3 @@
 ---
 dns_role: master
+server: server1
