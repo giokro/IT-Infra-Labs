@@ -9,42 +9,58 @@
     - 172.17.0.0/16
   dns_records:
     - name: island.awsome.
+      multi: no
       type: NS
       address: server1.island.awsome.
 
     - name: island.awsome.
+      multi: no
       type: NS
       address: server2.island.awsome.
 
     - name: server1.island.awsome.
+      multi: no
       type: A
       address: 192.168.56.105
 
     - name: server2.island.awsome.
+      multi: no
       type: A
       address: 192.168.56.106
 
     - name: prometheus.island.awsome.
+      multi: yes
       type: CNAME
       address: server2.island.awsome.
 
     - name: influxdb.island.awsome.
+      multi: no
       type: CNAME
       address: server2.island.awsome.
 
     - name: wordpress.island.awsome.
+      multi: no
       type: CNAME
       address: server1.island.awsome.
-
 
     - name: grafana.island.awsome.
+      multi: no
       type: CNAME
       address: server1.island.awsome.
 
+    - name: server.island.awsome.
+      multi: yes
+      type: A
+      address: 
+      - 192.168.56.105
+      - 192.168.56.106
+
     - name: ns1.island.awsome.
+      multi: no
       type: CNAME
       address: server1.island.awsome.
 
     - name: ns2.island.awsome.
+      multi: no
       type: CNAME
       address: server2.island.awsome.

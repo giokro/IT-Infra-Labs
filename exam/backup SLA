@@ -3,21 +3,21 @@ backup SLA			bind master				bind slave			mysql			influxdb
 - Coverage/Commands		/etc/bind containging dns db;		/var/lib/bind;			mysqldump "db";		influx backup -database "db" /path
 
 
-- RPO				acceptable data loss is the amount that will not hinder the function of the recovered service;
+- RPO				1 day;
 
 
-- Versioning			full each week, incr each day;
+- Versioning			stored on a local backup server and a remote one;
 
 
-- Retention			kept for 1 month;
+- Retention			kept for 31 days;
 
 
-- Usability			recovery verified when service is back to functional state with data intact;
+- Usability			test one random backup from previous week on a isolated machine;
 
 
 - Restoration criteria		should be restored when the data stored is compromised or erased;
 
 
-- RTO				depends on the size of the db; however, it's just 1 command;
+- RTO				3 hours;
 
 

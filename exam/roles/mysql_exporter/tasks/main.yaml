@@ -16,28 +16,14 @@
     state: present
     shell: /bin/bash
 
-- name: place .my.cnf # this is a file that contains user (exporter) and pass, is placed in the mysql_exporter_user home dir and is needed to run the exporter.
-  template:
-    src: .my.cnf
-    dest: '/home/{{ mysql_exporter_user }}/.my.cnf'
-
-- name: Add DB file
-  template:
-    src: database.sql
-    dest: /tmp/database.sql
-
-- name: Create mysql user
-  shell: mysql --defaults-file=/etc/mysql/debian.cnf < /tmp/database.sql
-
-- name: reload mysql
-  service:
-    name: mysql
-    state: restarted
-
-- name: Remove file
-  file:
-    path: /tmp/database.sql
-    state: absent
+- name: create database users
+  mysql_user:
+    name: '{{ mysql_exporter_user }}'
+    password: '{{ mysql_exporter_password }}'
+    priv: '*.*:ALL'
+    host: "localhost"
+    state: present
+    config_file: /etc/mysql/debian.cnf
 
 - name: systemd mysqld_exporter
   template:

@@ -3,25 +3,26 @@
     name: mysql-server 
     state: present
 
-- name: Mysql conf
-  template:
-    src: mysqld.cnf
-    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+- name: install packages
+  package:
+    name: ['mysql-server', 'python-pip', 'python-mysqldb']
+    state: present
 
-- name: Add DB file
-  template:
-    src: database.sql
-    dest: /tmp/database.sql
+- name: install docker component
+  pip:
+    name: PyMySQL
 
-- name: Create mysql user
-  shell: mysql --defaults-file=/etc/mysql/debian.cnf < /tmp/database.sql
+- name: create databases
+  mysql_db:
+    name: '{{ wordpress_db }}'
+    state: present
+    config_file: /etc/mysql/debian.cnf
 
-- name: reload mysql
-  service:
-    name: mysql
-    state: restarted
-
-- name: Remove file
-  file:
-    path: /tmp/database.sql
-    state: absent
+- name: create database users
+  mysql_user:
+    name: '{{ wordpress_user }}'
+    password: '{{ wordpress_password }}'
+    priv: '{{ wordpress_db }}.*:ALL'
+    host: "%"
+    state: present
+    config_file: /etc/mysql/debian.cnf

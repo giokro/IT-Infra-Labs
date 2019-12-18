@@ -25,6 +25,7 @@ mysql_exporter_password: !vault |
           3566393336623461370a663862633631396666373663653439316532383664643965323064303434
           6265
 
+wordpress_db: wordpress
 wordpress_user: wordpress
 wordpress_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
