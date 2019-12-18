@@ -11,11 +11,3 @@ $TTL	604800
 {{ i.name }} IN {{ i.type }} {{ i.address }}
 {% endfor %}
 
-{% for i in dns_records %}
-  {% if i.multi == "yes" %}
-   {{ i.name }} {% for address in i %}
-                  IN {{ i.type }} {{ i.address }}
-                {% endfor %}
-  {% endif %}
-{% endfor %}
-
