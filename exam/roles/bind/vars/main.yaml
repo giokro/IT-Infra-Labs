@@ -24,9 +24,22 @@
       type: A
       address: 192.168.56.106
 
+    - name: prometheus.island.awsome.
+      type: CNAME
+      address: server2.island.awsome.
+
     - name: influxdb.island.awsome.
-      type: A
-      address: 192.168.56.106
+      type: CNAME
+      address: server2.island.awsome.
+
+    - name: wordpress.island.awsome.
+      type: CNAME
+      address: server1.island.awsome.
+
+
+    - name: grafana.island.awsome.
+      type: CNAME
+      address: server1.island.awsome.
 
     - name: ns1.island.awsome.
       type: CNAME

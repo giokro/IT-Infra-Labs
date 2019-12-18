@@ -12,7 +12,7 @@
 - name: add user
   user:
     name: "{{ node_exporter_user }}"
-    password: "{{ secret }}"
+    password: "{{ node_exporter_password }}"
     state: present
     shell: /bin/bash
 

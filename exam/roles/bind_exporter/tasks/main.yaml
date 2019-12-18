@@ -12,7 +12,7 @@
 - name: add user
   user:
     name: "{{ bind_exporter_user }}"
-    password: "{{ secret }}"
+    password: "{{ bind_exporter_password }}"
     state: present
     shell: /bin/bash
 

@@ -12,14 +12,14 @@
 - name: add user
   user:
     name: "{{ mysql_exporter_user }}"
-    password: "{{ secret }}"
+    password: "{{ mysql_exporter_password }}"
     state: present
     shell: /bin/bash
 
 - name: place .my.cnf # this is a file that contains user (exporter) and pass, is placed in the mysql_exporter_user home dir and is needed to run the exporter.
   template:
     src: .my.cnf
-    dest: '{{ mycnf_dest }}.my.cnf'
+    dest: '/home/{{ mysql_exporter_user }}/.my.cnf'
 
 - name: Add DB file
   template:

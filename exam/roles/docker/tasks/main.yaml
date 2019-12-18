@@ -5,3 +5,6 @@
 - name: install docker component
   pip:
     name: docker-py
+
+- name: enable docker
+  shell: "systemctl enable docker"
