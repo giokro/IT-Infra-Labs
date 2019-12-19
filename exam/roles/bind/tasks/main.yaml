@@ -19,7 +19,7 @@
 - name: hash db # hash is used to check for changes
   when: dns_role == "master"
   copy: # if the hash on the host != current hash the db will be changed
-    content: "{{ dns_records | hash }}"
+    content: "{{ records | hash }}"
     dest: /etc/bind/db.island.hash
   notify:
     - get timestamp
@@ -29,7 +29,7 @@
 - name: hash db ptr
   when: dns_role == "master"
   copy:
-    content: "{{ dns_records | hash }}"
+    content: "{{ records | hash }}"
     dest: /etc/bind/db.island.ptr.hash
   notify:
     - get timestamp

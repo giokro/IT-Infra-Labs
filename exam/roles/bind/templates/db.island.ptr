@@ -7,10 +7,7 @@ $TTL	604800
 			 604800 )	; Negative Cache TTL
 ;
 
-{% for i in dns_records %}
-{% if i.type == "NS" %}
- IN {{i.type}} {{i.address}}
-{% elif i.type == "A" %}
-{{ i.address.split('.')[3] }} IN PTR {{ i.name }}
-{% endif %}
-{% endfor %}
+	IN	NS	server1.island.awsome.
+	IN	NS	server2.island.awsome.
+105	IN	PTR	server1.island.awsome.
+106	IN	PTR	server2.island.awsome.
